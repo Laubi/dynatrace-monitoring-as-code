@@ -146,7 +146,7 @@ func executeRequest(client *http.Client, request *http.Request) Response {
 				if requestId != "" {
 					util.Log.Warn("error while writing response log for id `%s`: %v", requestId, err)
 				} else {
-					util.Log.Warn("error while writing response log: %v", requestId, err)
+					util.Log.Warn("error while writing response log: %v", err)
 				}
 			}
 		}

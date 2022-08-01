@@ -324,7 +324,7 @@ func getDownloadCommand(fs afero.Fs) cli.Command {
 			},
 			&cli.StringFlag{
 				Name:    "specific-api",
-				Usage:   "Comma separated list of API's to download ",
+				Usage:   "Comma separated list of APIs to download ",
 				Aliases: []string{"a", "p", "downloadSpecificAPI"},
 			},
 		},

@@ -4,9 +4,6 @@
     command:
       required: true
       description: "What command to execute"
-    name:
-      required: true
-      description: asdf
     go-version:
       required: true
       description: asdf
@@ -31,8 +28,8 @@
       with:
         ref: ${{ github.event.pull_request.head.sha }}
 
-    - name: ${input.name}
-      run: make ${input.command}"
+    - name: ${input.command}
+      run: ${input.command}
       shell: bash
       env:
         URL_ENVIRONMENT_1: ${{ secrets.URL_ENVIRONMENT_1 }}

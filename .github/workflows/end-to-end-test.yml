@@ -28,30 +28,14 @@ jobs:
       contents: read
       checks: write
     steps:
-    - name: Set up Go 1.x
-      uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe #v4.1.0
+    - name: Release binaries
+      if: (github.event.action != 'labeled' || github.event.label.name == env.E2E_TEST_LABEL)
+      uses: ./.github/actions/run-e2e-command
       with:
         go-version: '~1.20'
+        command: make build-release
 
-
-    - name: Check out base repo
-      if: github.event.action != 'labeled'
-      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
-
-    # If a PR was reviewed and deemed safe to run in the context of our repo and it's secrets, we label it to trigger E2E tests.
-    # In that case this Action is triggered in pull_request_target context and checks out the HEAD of the PR branch.
-    # This is a semi-secure manually reviewed way to ensure we only run code we're fine accessing our secrets
-    - name: Check out PR # nosemgrep:yaml.github-actions.security.pull-request-target-code-checkout.pull-request-target-code-checkout
-      if: github.event.action == 'labeled' && github.event.label.name == env.E2E_TEST_LABEL
-      uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
-      with:
-        ref: ${{ github.event.pull_request.head.sha }}
-
-    - name: 🏁 Build release binaries
-      if: (github.event.action != 'labeled' || github.event.label.name == env.E2E_TEST_LABEL)
-      run: make build-release
-
-  integration-test:
+  integration:
     name: Integration tests
     runs-on: ubuntu-latest
     permissions:
@@ -65,31 +49,49 @@ jobs:
       with:
         go-version: '~1.20'
         command: make integration-test testopts="--junitfile test-result-integration.xml"
-        name: Integration test
 
+
+  legacy-integration:
+    name: Legacy Integration tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    steps:
     - name: Legacy Integration test
       if: (github.event.action != 'labeled' || github.event.label.name == env.E2E_TEST_LABEL)
       uses: ./.github/actions/run-e2e-command
       with:
         go-version: '~1.20'
         command: make integration-test testopts="--junitfile test-result-integration-legacy.xml"
-        name: Legacy Integration test
 
+  download-restore:
+    name: Download Restore
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    steps:
     - name: Download-restore-test
       if: (github.event.action != 'labeled' || github.event.label.name == env.E2E_TEST_LABEL)
       uses: ./.github/actions/run-e2e-command
       with:
         go-version: '~1.20'
         command: make download-restore-test testopts="--junitfile test-result-integration-download-restore.xml"
-        name: Legacy Integration test
 
+  nightly:
+    name: Nightly
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    steps:
     - name: Nightly
       if: github.event_name == 'schedule'
       uses: ./.github/actions/run-e2e-command
       with:
         go-version: '~1.20'
         command: make nightly-test testopts="--junitfile test-result-integration-nightly.xml"
-        name: Nightly
 
   upload_event:
     name: "Upload Event File"

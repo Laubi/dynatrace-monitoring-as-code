@@ -25,7 +25,7 @@ jobs:
 
     steps:
     - name: Store base repo sha
-      if: github.event.action == 'labeled' && github.event.label.name == "run-e2e-test"
+      if: github.event.action == 'labeled' && github.event.label.name == 'run-e2e-test'
       run: echo "SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_STATE
 
     - name: Store base repo sha
@@ -36,7 +36,7 @@ jobs:
   release-binaries:
     name: Build release binaries
     needs: [setup]
-    if: github.event.action != 'labeled' || github.event.label.name == "run-e2e-test"
+    if: github.event.action != 'labeled' || github.event.label.name == 'run-e2e-test'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -76,13 +76,13 @@ jobs:
     # In that case this Action is triggered in pull_request_target context and checks out the HEAD of the PR branch.
     # This is a semi-secure manually reviewed way to ensure we only run code we're fine accessing our secrets
     - name: Check out PR # nosemgrep:yaml.github-actions.security.pull-request-target-code-checkout.pull-request-target-code-checkout
-      if: github.event.action == 'labeled' && github.event.label.name == "run-e2e-test"
+      if: github.event.action == 'labeled' && github.event.label.name == 'run-e2e-test'
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
       with:
         ref: ${{ github.event.pull_request.head.sha }}
 
     - name: 🌎 Integration test
-      if: (github.event.action != 'labeled' || github.event.label.name == "run-e2e-test")
+      if: (github.event.action != 'labeled' || github.event.label.name == 'run-e2e-test')
       run: make integration-test testopts="--junitfile test-result-integration.xml"
       env:
         URL_ENVIRONMENT_1: ${{ secrets.URL_ENVIRONMENT_1 }}
@@ -104,7 +104,7 @@ jobs:
 
   legacy-integration-tests:
     name: Legacy integration tests
-    if: (github.event.action != 'labeled' || github.event.label.name == "run-e2e-test")
+    if: (github.event.action != 'labeled' || github.event.label.name == 'run-e2e-test')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -124,7 +124,7 @@ jobs:
     # In that case this Action is triggered in pull_request_target context and checks out the HEAD of the PR branch.
     # This is a semi-secure manually reviewed way to ensure we only run code we're fine accessing our secrets
     - name: Check out PR # nosemgrep:yaml.github-actions.security.pull-request-target-code-checkout.pull-request-target-code-checkout
-      if: github.event.action == 'labeled' && github.event.label.name == "run-e2e-test"
+      if: github.event.action == 'labeled' && github.event.label.name == 'run-e2e-test'
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
       with:
         ref: ${{ github.event.pull_request.head.sha }}
@@ -152,7 +152,7 @@ jobs:
 
   download-restore-test:
     name: Download-restore-test
-    if: (github.event.action != 'labeled' || github.event.label.name == "run-e2e-test")
+    if: (github.event.action != 'labeled' || github.event.label.name == 'run-e2e-test')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -172,7 +172,7 @@ jobs:
     # In that case this Action is triggered in pull_request_target context and checks out the HEAD of the PR branch.
     # This is a semi-secure manually reviewed way to ensure we only run code we're fine accessing our secrets
     - name: Check out PR # nosemgrep:yaml.github-actions.security.pull-request-target-code-checkout.pull-request-target-code-checkout
-      if: github.event.action == 'labeled' && github.event.label.name == "run-e2e-test"
+      if: github.event.action == 'labeled' && github.event.label.name == 'run-e2e-test'
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
       with:
         ref: ${{ github.event.pull_request.head.sha }}

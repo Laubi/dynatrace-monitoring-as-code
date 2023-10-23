@@ -12,7 +12,7 @@ If you're new to Monaco and want to learn more, check out the [Observability Cli
 
 ## Support for Monaco
 
-The Dynatrace Configuration as Code tool Monaco is provided by Dynatrace Incorporated. \
+The Dynatrace Configuration as Code tool Masdfasdfaonaco is provided by Dynatrace Incorporated. \
 Support for Monaco 2.0+ is provided by the Dynatrace Support team, as described on the [support page](https://support.dynatrace.com/).
 
 > ⚠️ Older Monaco 1.x versions are not officially supported - we strongly suggest you upgrade to 2.x as soon as possible.

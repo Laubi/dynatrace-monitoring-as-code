@@ -22,15 +22,21 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    outputs:
+      sha: ${{ steps.write.outputs.sha }}
 
     steps:
     - name: Store base repo sha
       if: github.event.action == 'labeled' && github.event.label.name == 'run-e2e-test'
-      run: echo "SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_STATE
+      run: echo "SHA=${{ github.event.pull_request.head.sha }}" >> $GITHUB_ENV
 
     - name: Store base repo sha
       if: github.event.action != 'labeled'
-      run: echo "SHA=$GITHUB_SHA" >> $GITHUB_STATE
+      run: echo "SHA=$GITHUB_SHA" >> $GITHUB_ENV
+
+    - id: write
+      name: Write correct sha variable
+      run: echo "SHA=$SHA" >> $GITHUB_STATE
 
 
   release-binaries:
@@ -49,8 +55,10 @@ jobs:
 
     - name: Checkout
       uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 #v4.1.1
+      env:
+        sha: ${{needs.setup.outputs.sha}}
       with:
-        ref: ${{ env.SHA }}
+        ref: ${{ env.sha }}
 
     - name: 🏁 Build release binaries
       run: make build-release

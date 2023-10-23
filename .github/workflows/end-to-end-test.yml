@@ -33,7 +33,7 @@ jobs:
 
     - name: Store base repo sha
       if: github.event.action != 'labeled'
-      run: echo "SHA=${{ env.GITHUB_SHA }}" >> $GITHUB_STATE
+      run: echo "SHA=$GITHUB_SHA" >> $GITHUB_STATE
 
 
   release-binaries:

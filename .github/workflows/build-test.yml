@@ -69,14 +69,3 @@ jobs:
         with:
           args: |
             -Dsonar.projectVersion=${{steps.get_tag.outputs.GIT_TAG}}
-
-
-  upload_event:
-    name: "Upload Event File"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Upload
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 #v4.6.2
-        with:
-          name: event_file
-          path: ${{ github.event_path }}

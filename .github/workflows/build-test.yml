@@ -57,10 +57,19 @@ jobs:
       - name: 🧪 Unit test with coverage
         run: gotestsum --format testdox --format-icons hivis -- -coverprofile=cov.out -tags=unit -v -race ./...
 
+
+      - name: Get current tag¡
+        id: get_tag
+        run: echo "tag=$(git describe --tags --abbrev=0)"
+
       - name: ⬆️ SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@aa494459d7c39c106cc77b166de8b4250a32bb97 # nosemgrep false detection of commit v5.1.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: |
+            -Dsonar.projectVersion=${{steps.get_tag.outputs.tag}}
+
 
   upload_event:
     name: "Upload Event File"
